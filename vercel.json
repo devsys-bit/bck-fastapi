@@ -9,7 +9,8 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "main.py"
+      "dest": "main.py",
+      "methods": ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE", "OPTIONS"]
     }
   ]
 }
