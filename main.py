@@ -4,15 +4,20 @@ from fastapi_pagination import add_pagination
 from database import engine
 from task.controller import router
 from datetime import datetime, timezone
+from contextlib import asynccontextmanager
 
-app = FastAPI()
-
-add_pagination(app)
-
-@app.on_event("startup")
-async def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  # Código de inicialización (antes de que la app comience a servir requests)
   async with engine.begin() as conn:
     await conn.run_sync(SQLModel.metadata.create_all)
+  yield
+  # Código de finalización (cuando la app se está cerrando)
+  await engine.dispose()
+
+app = FastAPI(lifespan=lifespan)
+
+add_pagination(app)
 
 @app.get("/")
 async def welcome():

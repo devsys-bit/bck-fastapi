@@ -27,6 +27,7 @@ engine = create_async_engine(
   connect_args={"statement_cache_size": 0}
 )
 
+
 async def get_session() -> AsyncSession:
   async with AsyncSession(engine) as session:
     yield session
